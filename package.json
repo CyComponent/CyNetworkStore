@@ -1,0 +1,60 @@
+{
+  "name": "CyNetworkStore",
+  "author": "Keiichiro Ono",
+  "version": "v0.0.1",
+  "description": "Network store",
+  "license": "MIT",
+  "keywords": [],
+  "main": "build/CyNetworkStore.js",
+ "files": [
+    "webpack.config.js",
+    ".preprocessor.js",
+    ".travis.yml",
+    "build/*",
+    "src/*"
+  ],
+  "homepage": "https://github.com/CyComponent/CyNetworkStore",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CyComponent/CyNetworkStore.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CyComponent/CyNetworkStore/issues"
+  },
+  "scripts": {
+    "build": "webpack --progress --colors",
+    "clean": "rm build/*",
+    "lint": "eslint src/; exit 0",
+    "test": "eslint src/ && jest",
+    "coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "immutable": "^3.7.6",
+    "redux": "^3.5.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.5.1",
+    "babel-eslint": "^4.1.8",
+    "babel-jest": "^6.0.1",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.5.0",
+    "eslint": "^3.0.0",
+    "jest-cli": "^0.8.2",
+    "jest-webpack-alias": "^2.0.0",
+    "webpack": "^1.12.13"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/.preprocessor.js"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "extends": "eslint:recommended",
+    "ecmaFeatures": {
+      "modules": true
+    },
+    "env": {
+      "es6": true,
+      "browser": true
+    }
+  }
+}
