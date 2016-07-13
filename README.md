@@ -1,25 +1,8 @@
 
-CyStoreScaffold
-====================
-A quick start scaffold project for creating CyStores for the CyFramework. This project requires that npm be installed globally on the development machine.
+CyNetworkStore
+==============
+Store for collection of networks.
 
-How to bootstrap a new project
------------------------------
-Use the setup script in the directory to convert the scaffold into your project (it will delete itself upon finishing setup).
-```
-git clone https://github.com/CyComponent/CyStoreScaffold.git
-cd CyStoreScaffold && chmod +x setup.sh
-./setup.sh
-
-```
-
-####Contains:
-- Redux
-- Webpack
-- Babel (es6 supported!)
-- ESLint
-- Jest
-- Travis
 
 Commands
 --------
