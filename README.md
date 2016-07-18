@@ -1,7 +1,6 @@
+# CyNetworkStore
 
-CyNetworkStore
-==============
-Store for collection of networks.
+Redux data store for CyNetworkComponent.
 
 
 Commands

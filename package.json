@@ -1,12 +1,17 @@
 {
   "name": "CyNetworkStore",
   "author": "Keiichiro Ono",
-  "version": "v0.0.1",
-  "description": "Network store",
-  "license": "MIT",
-  "keywords": [],
+  "version": "v0.9.0",
+  "description": "Redux data store for CyNetworkViewer",
+  "license": "UCSD",
+  "keywords": [
+    "cytoscape",
+    "visualization",
+    "graph",
+    "bioinformatics"
+  ],
   "main": "build/CyNetworkStore.js",
- "files": [
+  "files": [
     "webpack.config.js",
     ".preprocessor.js",
     ".travis.yml",
@@ -39,6 +44,7 @@
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.5.0",
     "eslint": "^3.0.0",
+    "estraverse-fb": "^1.3.1",
     "jest-cli": "^0.8.2",
     "jest-webpack-alias": "^2.0.0",
     "webpack": "^1.12.13"
