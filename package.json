@@ -1,5 +1,5 @@
 {
-  "name": "CyNetworkStore",
+  "name": "cy-network-store",
   "author": "Keiichiro Ono",
   "version": "v0.9.0",
   "description": "Redux data store for CyNetworkViewer",
