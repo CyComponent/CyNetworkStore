@@ -5,19 +5,19 @@ CyNetworkStore
 __CyStore Library Name:__ CyNetworkStore
 > ######  Note: A CyStore's library name appears in npm, and is the name used for importing the CyStore as a library.
 
-__CyStore Registered Name:__ 
+__CyStore Registered Name:__ cy_network
 > ######  Note: The CyStore's registered name appears when it's initialized with the CyFramework in the CyFramework's data model.
 
 __Sample Usage__
 > ```javascript
   #Create an instance of the CyFramework using the factory method config, pass in the CyStore dependancy list.
-  var cyto = CyFramework.config([NDExStore])
-  #Dispatch an action to the CyFramework, in this case, we are starting a lucene search for 'brc1'
-  cyto.dispatch(NDExStore.luceneActions.searchFor('brc1')
-  #Get the state of store 'ndex'. This is the data model associated with the NDExStore CyStore.
-  var state = cyto.store('ndex')
-  #Get the list of networks returned from the lucene search, we use .get() because lucene is an immutablejs map.
-  console.log(state.lucene.get('networks'))
+  var cyto = CyFramework.config(CyNetworkStore])
+  #Dispatch an action to the CyFramework, in this case, we are adding a sample network called 'my_net'.
+  cyto.dispatch(NDExStore.networkActions.addNetwork('my_net', { nodes: [], edges: [] }))
+  #Get the state of store 'cy_network'. This is the data model associated with the CyNetworkStore CyStore.
+  var state = cyto.store('cy_network')
+  #Get back our sample network from the networks store, we use .get() because networks is an immutablejs map.
+  console.log(state.networks.get('my_net'))
 ```
 
 lucene
