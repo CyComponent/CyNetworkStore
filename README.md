@@ -20,53 +20,42 @@ __Sample Usage__
   console.log(state.networks.get('my_net'))
 ```
 
-lucene
+networks
 ---
-> The lucene store is an immutablejs map. The lucene store has a flag indicating whether the client is still searching fo networks (for displaying a spinner, etc). It also containers an error that is filled if the search fails, and a list of networks that contain the results of the previous search.
+> The networks store is an immutablejs map. It is a simple table where etwork identifiers and network data models are keys and values respectively. The store provides only two actions, adding and deleting a network. To edit a network, one simple overwrites the existing data model and immutablejs takes care of only updating the changed portions of the model. Since actions are serialized, changes are made in FIFO order.
 
 __Data model__
 > ```javascript
-  lucene: Map({
-    searching: false,
-    networkSummaries: Set(),
-    error: null
-  })
+  networks: Map({})
 ```
 
 ### Action Creators
 
-__Registed Name:__ luceneActions
-> The object under which the action creators are exported under. 
+__Registed Name:__ networkActions
+> The object under which the action creators are exported. 
 
-#### searchBegin()
-> Sets the searching flag to true, use before beginning a search with searchFor/3
-
-#### searchError(error)
-> Called from searchFor/3, not normally used elsewhere, sets the error field with the value of error.
+#### addNetwork(networkId, data)
+> Adds a network to the network table, or overwrites an existing network. 
 >
 > __Params__
-> - error: An error object that can be inspected to see the error reason of a failed lucene search.
+> - networkId: A string, any unique identifier for this network.
+> - data: A complex object representing a network.
 
-#### seachFor(server, query, resultSize)
-> Begins a lucene search agains the server with a query string, this search will either update networkSummaries or error, depending on the outcome of the search. Either way, it will then flip the searching flag to false.
+#### deleteNetwork(networkId)
+> Deletes the network from the network table.
 >
 > __Params__
-> - server: A string, usually taken from the server store to reflect the store's choice of server.
-> - query: A string, the lucene query to search against NDEx. 
-> - resultSize(OPTIONAL): Default of 50, setting this to a high value will incease the searchTime. This is the max number of results returned by the lucene search.
+> - networkId: A string, the unique identifier of the network to be deleted.
 
-server
+networkDownload
 ---
-> The server store is an immutable map. It containers information about the NDEx server to be used, the username and password, and the log in state of the user. If loggedIn is false, th userName and userPass fields are considered garbage. Actions allow setting the server name and address, and logging the user in and out.
+> The networkDownload store provides actions that can download networks from a url and store the network under that url in the networks store. The data model for this store provides information about the status of a download.
 
 __Data model__
 > ```javascript
   lucene: Map({
-    serverName: "Public NDEx",
-    serverAddress: "http://public.ndexbio.org",
-    userName: "",
-    userPass: "",
-    loggedIn: false
+    downloading: false,
+    error: null
   })
 ```
 
@@ -75,19 +64,18 @@ __Data model__
 __Registed Name:__ serverActions
 > The object under which the action creators are exported under. 
 
-#### setServer(name, address)
-> Set the server name and address.
+#### downloadBegin()
+> Sets the downloading flag.
+
+#### downloadSuccess(networkId, data)
+> First dispatches to the networks store using addNetwork, then sets downloading to false.
 >
 > __Params__
-> - name: A string, a human readable identifier for the server.
-> - address: The url of the NDEx server.
+> - networkId: A string, any unique identifier for this network.
+> - data: A complex object representing a network.
 
-#### login(name, pass)
-> Sets loggedIn to true, and adds the users credentials (unencrypted).
+#### download(networkUrl)
+> Download performs an HTTP GET operation, with an ACCEPT of application/json. The server must respond with a network represented as json or the download action will fill error with an error object. If the download is successful, the network is added to the networks store with a key of networkUrl. Always concludes with setting downloading to false.
 >
 > __Params__
-> - name: The user's NDEx username
-> - pass: The user's NDEx password 
-
-#### logout()
-> Sets the loggedIn flag to false.
+> - networkUrl: A full url at which a network repsented as JSON can be aquired via the HTTP GET method.
