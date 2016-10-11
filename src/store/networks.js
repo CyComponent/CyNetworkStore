@@ -3,7 +3,9 @@ import {Map} from 'immutable'
 const ADD_NETWORK = 'ADD_NETWORK'
 const DELETE_NETWORK = 'DELETE_NETWORK'
 
+// Just create empty map as the default state.
 const defaultState = Map({})
+
 
 export default function networkStore(state = defaultState, action) {
   switch (action.type) {
@@ -16,6 +18,7 @@ export default function networkStore(state = defaultState, action) {
   }
 }
 
+
 export function addNetwork(networkId, data) {
   return {
     type: ADD_NETWORK,
@@ -24,11 +27,10 @@ export function addNetwork(networkId, data) {
   }
 }
 
+
 export function deleteNetwork(networkId) {
   return {
     type: DELETE_NETWORK,
     networkId
   }
 }
-
-
