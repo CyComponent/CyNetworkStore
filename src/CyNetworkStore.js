@@ -1,15 +1,14 @@
-import networks, * as networkActions from './store/networks'
-import networkDownload, * as networkDownloadActions from './store/networkDownload'
-import * as networkLoaderActions from './actions/networkLoaderActions'
+import * as networkActions from './actions/networkActions'
+import * as networksActions from './actions/networksActions'
+import network from './reducers/network'
+import networks from './reducers/networks'
 
 const storeName = 'cy_network'
-const store = {networks, networkDownload}
-
+const reducers = {network, networks}
 
 export {
   storeName,
-  store,
+  reducers,
   networkActions,
-  networkDownloadActions,
-  networkLoaderActions
+  networksActions
 }

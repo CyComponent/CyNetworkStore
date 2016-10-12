@@ -1,79 +1,68 @@
-import {Map} from 'immutable'
+import {Map, Set} from 'immutable'
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import {bindActionCreators, createStore, applyMiddleware} from 'redux'
+import {bindActionCreators, createStore, applyMiddleware, combineReducers} from 'redux'
 import {Provider, connect} from 'react-redux'
-
 import CyNetworkViewer from 'cy-network-viewer'
-
-import {networkLoaderActions} from 'cy-network-store'
 import thunk from 'redux-thunk'
+import {networkActions, networksActions, reducers} from 'cy-network-store'
 
-// Sample Redux application using viewer and store
 
-const defNetwork = Map({
+/**
+ *
+ * This is a simple example to build application using
+ * Network Viewer and its Store.
+ *
+ */
+
+
+// Empty network
+const EMPTY_NETWORK = {
   data: {
-    name: 'empty1'
+    name: 'empty network'
   },
   elements: {
-    nodes: [{data: {id: 'node1'}}],
+    nodes: [],
     edges: []
   }
-})
+}
 
 const defaultState = Map({
-  network: defNetwork,
-  error: null
+  network: EMPTY_NETWORK,
 })
 
 const networkUrl = 'https://raw.githubusercontent.com/cytoscape/json/master/src/test/resources/testData/galFiltered.json'
 
 
-// Store
-function singleNetworkStore(state = defaultState, action) {
-
-
-  console.log('============ Store ==========');
-  console.log(state);
-  console.log(action);
-
-
-  switch (action.type) {
-    case 'RECEIVE_NETWORK':
-      const newState = state.merge({
-        network: action.cx,
-        error: null
-      })
-
-
-      console.log('newState:');
-      console.log(newState);
-
-      return newState
-    default:
-      return state
-  }
-}
+// Create store from reducer
+const create = window.devToolsExtension
+  ? window.devToolsExtension()(createStore)
+  : createStore
 
 const createStoreWithMiddleware = applyMiddleware(
   thunk
-)(createStore)
-
-const store = createStoreWithMiddleware(singleNetworkStore, defaultState);
+)(create)
 
 
-function mapStateToProps(state) {
-  console.log('!!!!!!!!mapping!!!!!!!!!!!!')
-  console.log(state.get('network'))
+const store = createStoreWithMiddleware(reducers.networks);
+
+
+const mapStateToProps = state => {
+  console.log('* Map State:')
+  console.log(state)
+
   return {
-    network: state.get('network')
-  };
+    networks: state,
+    // network: state.get('network'),
+    // selected: state.get('selected'),
+    // view: state.get('view')
+  }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = dispatch => {
   return {
-    loadNetwork: bindActionCreators(networkLoaderActions, dispatch)
-
+    networkActions: bindActionCreators(networkActions, dispatch),
+    networksActions: bindActionCreators(networksActions, dispatch)
   };
 }
 
@@ -82,8 +71,17 @@ function mapDispatchToProps(dispatch) {
 class NetworkViewer extends Component {
 
   handleClick(evt) {
-    console.log(this.props.loadNetwork)
-    this.props.loadNetwork.fetchNetwork('./sample.json')
+    console.log(networksActions)
+    this.props.networksActions.fetchNetwork('network1', './sample.json')
+    this.props.networksActions.fetchNetwork('network2', './sample.json')
+  }
+
+  handleSelect(evt) {
+    this.props.networkActions.selectNodes([1, 2, 3, 4, 5])
+  }
+
+  handleDeselect(evt) {
+    this.props.networkActions.deselectNodes([2, 5])
   }
 
 
@@ -93,23 +91,64 @@ class NetworkViewer extends Component {
       height: '100%',
       width: '100%'
     }
-    const net = this.props.network.toJS()
 
-    console.log(this.props);
+
     console.log("%%%%%%% Rendering");
-    console.log(net);
+    console.log(this.props);
+
+    let net1 = this.props.networks.get('network1')
+    let net2 = this.props.networks.get('network2')
+
+    if(net1 === undefined || net1 === null || net1 === {}) {
+      net1 = EMPTY_NETWORK
+    } else {
+      net1 = net1.toJS().network
+
+    }
+
+    if(net2 === undefined || net2 === null || net2 === {}) {
+      net2 = EMPTY_NETWORK
+    } else {
+      net2 = net2.toJS().network
+
+    }
+
+    console.log('********* net1')
+    console.log(net1);
+    console.log('********* net2')
+    console.log(net2);
 
     return (
       <div style={style}>
 
-        <button type='button' onClick={event => this.handleClick(event)}>
-          Load CX Network
-        </button>
+        <div>
+          <button type='button' onClick={event => this.handleClick(event)}>
+            Load CX Network
+          </button>
+          <button type='button' onClick={event => this.handleSelect(event)}>
+            Select Nodes
+          </button>
+          <button type='button' onClick={event => this.handleDeselect(event)}>
+            Deselect Nodes
+          </button>
+        </div>
 
+        <h2>Renderer 1</h2>
         <CyNetworkViewer
           id='Rend1'
           renderer='cytoscape'
-          network={net}
+          networkId='network1'
+          network={net1}
+          eventHandlers={this.props.networksActions}
+        />
+
+        <h2>Renderer 2</h2>
+        <CyNetworkViewer
+          id='Rend2'
+          renderer='cytoscape'
+          networkId='network2'
+          network={net2}
+          eventHandlers={this.props.networksActions}
         />
       </div>
     )
@@ -120,7 +159,6 @@ const App = connect(
   mapStateToProps,
   mapDispatchToProps
 )(NetworkViewer);
-
 
 
 // Render it.
