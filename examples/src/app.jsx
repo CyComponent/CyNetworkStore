@@ -61,9 +61,16 @@ class NetworkViewer extends Component {
 
   handleClick(evt) {
 
+
+    const cx1 = 'http://www.ndexbio.org/rest/network/4a1f9584-000c-11e6-b550-06603eb7f303/asCX'
+    const cx2 = 'http://www.ndexbio.org/rest/network/507d3d72-14e5-11e6-a1f8-06603eb7f303/asCX'
+
+    const networkUrl = 'http://ci-dev-serv.ucsd.edu:3001/ndex2cyjs/4a1f9584-000c-11e6-b550-06603eb7f303'
+    const networkUrl2 = 'http://ci-dev-serv.ucsd.edu:3001/ndex2cyjs/507d3d72-14e5-11e6-a1f8-06603eb7f303'
+
     // Load two networks
-    this.props.networksActions.fetchNetwork('network1', './sample.json')
-    this.props.networksActions.fetchNetwork('network2', './sample.json')
+    this.props.networksActions.fetchNetwork('network1', networkUrl)
+    this.props.networksActions.fetchNetwork('network2', networkUrl2)
   }
 
   handleSelect(evt) {
@@ -85,7 +92,6 @@ class NetworkViewer extends Component {
   }
 
   render() {
-
     console.log("%%%%%%% App renderer called");
     console.log(this.props);
 
