@@ -1,4 +1,3 @@
-import {Map, Set} from 'immutable'
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import {bindActionCreators, createStore, applyMiddleware, combineReducers} from 'redux'
@@ -6,6 +5,8 @@ import {Provider, connect} from 'react-redux'
 import CyNetworkViewer from 'cy-network-viewer'
 import thunk from 'redux-thunk'
 import {networkActions, networksActions, reducers} from 'cy-network-store'
+import {stylesActions} from 'cy-style-store'
+import {reducers as styleReducer} from 'cy-style-store'
 
 
 /**
@@ -16,25 +17,13 @@ import {networkActions, networksActions, reducers} from 'cy-network-store'
  */
 
 
-// Empty network
-const EMPTY_NETWORK = {
-  data: {
-    name: 'empty network'
-  },
-  elements: {
-    nodes: [],
-    edges: []
-  }
+// Base style for the application window
+const style = {
+  height: '100%',
+  width: '100%'
 }
 
-const defaultState = Map({
-  network: EMPTY_NETWORK,
-})
-
-const networkUrl = 'https://raw.githubusercontent.com/cytoscape/json/master/src/test/resources/testData/galFiltered.json'
-
-
-// Create store from reducer
+// 1. Create store from reducers
 const create = window.devToolsExtension
   ? window.devToolsExtension()(createStore)
   : createStore
@@ -43,35 +32,36 @@ const createStoreWithMiddleware = applyMiddleware(
   thunk
 )(create)
 
+const networks = reducers.networks
+const styles = styleReducer.styles
+const combined = combineReducers({networks, styles})
+const store = createStoreWithMiddleware(combined)
 
-const store = createStoreWithMiddleware(reducers.networks);
 
-
+// 2. Connect them to Redux
 const mapStateToProps = state => {
-  console.log('* Map State:')
-  console.log(state)
-
   return {
-    networks: state,
-    // network: state.get('network'),
-    // selected: state.get('selected'),
-    // view: state.get('view')
+    networks: state.networks,
+    styles: state.styles,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     networkActions: bindActionCreators(networkActions, dispatch),
-    networksActions: bindActionCreators(networksActions, dispatch)
+    networksActions: bindActionCreators(networksActions, dispatch),
+    stylesActions: bindActionCreators(stylesActions, dispatch)
   };
 }
+
 
 
 // Base App
 class NetworkViewer extends Component {
 
   handleClick(evt) {
-    console.log(networksActions)
+
+    // Load two networks
     this.props.networksActions.fetchNetwork('network1', './sample.json')
     this.props.networksActions.fetchNetwork('network2', './sample.json')
   }
@@ -85,37 +75,35 @@ class NetworkViewer extends Component {
   }
 
 
+
+  componentWillReceiveProps(nextProps) {
+    console.log("----------------NEW prop");
+    console.log(nextProps);
+    const n1 = nextProps.networks.get('network1')
+    console.log(n1.get('network').toJS())
+
+  }
+
   render() {
 
-    const style = {
-      height: '100%',
-      width: '100%'
-    }
-
-
-    console.log("%%%%%%% Rendering");
+    console.log("%%%%%%% App renderer called");
     console.log(this.props);
 
     let net1 = this.props.networks.get('network1')
     let net2 = this.props.networks.get('network2')
 
-    if(net1 === undefined || net1 === null || net1 === {}) {
-      net1 = EMPTY_NETWORK
+    if(net1 === null || net1 === undefined) {
+      net1 = null
     } else {
-      net1 = net1.toJS().network
-
+      net1 = net1.get('network').toJS()
     }
 
-    if(net2 === undefined || net2 === null || net2 === {}) {
-      net2 = EMPTY_NETWORK
+    if(net2 === null || net2 === undefined) {
+      net2 = null
     } else {
-      net2 = net2.toJS().network
-
+      net2 = net2.get('network').toJS()
     }
-
-    console.log('********* net1')
     console.log(net1);
-    console.log('********* net2')
     console.log(net2);
 
     return (
@@ -155,6 +143,8 @@ class NetworkViewer extends Component {
   }
 }
 
+
+// Initialize App
 const App = connect(
   mapStateToProps,
   mapDispatchToProps

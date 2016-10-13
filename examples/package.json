@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "cy-network-store": "^2.0.0",
+    "cy-style-store": "^2.0.0",
     "cy-network-viewer": "^2.0.0",
     "immutable": "^3.8.1",
     "react": "^15.3.2",

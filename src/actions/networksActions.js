@@ -1,19 +1,53 @@
-import {Map, Set} from 'immutable'
+import Immutable, {Set} from 'immutable'
 
-
-const HEADERS = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json'
-}
 
 const GET_PARAMS = {
   method: 'get',
-  headers: HEADERS
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  }
 }
-
 
 export const ADD_NETWORK = 'ADD_NETWORK'
 export const DELETE_NETWORK = 'DELETE_NETWORK'
+
+// Selection
+export const SELECT_NODES = 'SELECT_NODES'
+export const DESELECT_NODES = 'DESELECT_NODES'
+export const SELECT_EDGES = 'SELECT_EDGES'
+export const DESELECT_EDGES = 'DESELECT_EDGES'
+
+// View-related action types
+export const FIT = 'FIT'
+
+// Addition/deletion
+export const ADD_NODES = 'ADD_NODES'
+export const ADD_EDGES = 'ADD_EDGES'
+
+export const DELETE_NODES = 'DELETE_NODES'
+export const DELETE_EDGES = 'DELETE_EDGES'
+
+
+function buildNetworkState(cx) {
+
+  return Immutable.fromJS({
+
+    network: cx,
+    selected: {
+      nodes: Set(),
+      edges: Set()
+    },
+    view: {
+      zoom: 1.0,
+      pan: {
+        x: 0,
+        y: 0
+      },
+      style: {}
+    }
+  })
+}
 
 
 export function addNetwork(networkId, data) {
@@ -50,42 +84,9 @@ export function fetchNetwork(networkId, cxNetworkUrl) {
 }
 
 
-function buildNetworkState(cx) {
-
-  return Map({
-
-    network: cx,
-    selected: {
-      nodes: Set([]),
-      edges: Set([])
-    },
-    view: {
-      zoom: 1.0,
-      pan: {
-        x: 0,
-        y: 0
-      },
-      style: {}
-    }
-  })
-}
 
 
-// Selection
-export const SELECT_NODES = 'SELECT_NODES'
-export const DESELECT_NODES = 'DESELECT_NODES'
-export const SELECT_EDGES = 'SELECT_EDGES'
-export const DESELECT_EDGES = 'DESELECT_EDGES'
 
-// View-related action types
-export const FIT = 'FIT'
-
-// Addition/deletion
-export const ADD_NODES = 'ADD_NODES'
-export const ADD_EDGES = 'ADD_EDGES'
-
-export const DELETE_NODES = 'DELETE_NODES'
-export const DELETE_EDGES = 'DELETE_EDGES'
 
 
 
