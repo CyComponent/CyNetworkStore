@@ -24,12 +24,5 @@ module.exports = {
         loaders: ['babel?presets[]=es2015']
       }
     ]
-  },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })
-  ]
+  }
 }

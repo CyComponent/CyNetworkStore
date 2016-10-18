@@ -88,8 +88,6 @@ export function fetchNetwork(networkId, cxNetworkUrl) {
 
 
 
-
-
 export function selectNodes(networkId, nodeIds) {
   return {
     type: SELECT_NODES,
