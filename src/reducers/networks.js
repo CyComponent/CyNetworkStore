@@ -10,6 +10,11 @@ export default function networks(state = DEF_STATE, action) {
 
   const curNetwork = state.get(action.networkId)
 
+
+
+  console.log('####### curNetwork is:')
+  console.log(curNetwork)
+
   switch (action.type) {
     case actions.ADD_NETWORK:
       return state.set(action.networkId, Map(action.data))

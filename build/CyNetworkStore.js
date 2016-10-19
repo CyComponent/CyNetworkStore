@@ -5297,6 +5297,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  var curNetwork = state.get(action.networkId);
 	
+	  console.log('####### curNetwork is:');
+	  console.log(curNetwork);
+	
 	  switch (action.type) {
 	    case actions.ADD_NETWORK:
 	      return state.set(action.networkId, (0, _immutable.Map)(action.data));
